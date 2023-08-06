@@ -1,5 +1,5 @@
 <template>
-  <q-th :props="props" :class="{active: isActive}">
+  <q-th :props="props" :class="{active: isActive}" class="cell-tp">
     <div class="alignment">
       {{ props.col.label }}
       <div class="wrapper preventClick">
@@ -30,7 +30,7 @@
             <q-list class="list">
               <q-item clickable>
                 <q-item-section>
-                  <q-checkbox v-model="isSelectAll" label="Выделить все" />
+                  <q-checkbox v-model="isSelectAll" label="Выделить все" @click.prevent="changeAll" />
                 </q-item-section>
               </q-item>
 
@@ -49,7 +49,7 @@
 </template>
 
 <script>
-import { ref } from 'vue';
+import { ref, onMounted, onBeforeUnmount, watch } from 'vue';
 import SurveyRows from "@/data/surveyRows.js";
 import IconFilter from "@/components/svg/IconFilter.vue";
 import IconFilterBlue from "@/components/svg/IconFilterBlue.vue";
@@ -61,12 +61,49 @@ SurveyRows.forEach(function(item) {
 tpVal = Array.from(new Set(tpVal)).sort();
 
 export default {
-  setup() {
+  props: ['props', 'searchTp'],
+  emits: ['searchTp'],
+  setup(props, { emit }) {
     const tpValues = ref(tpVal);
     const isSelectAll = ref(false);
     const selection = ref([]);
     const isActive = ref(false);
     const query = ref('');
+
+    /* Клик по документу - закрытие окна с фильтром */
+    const onDocumentClick = (event) => {
+      if (event.target.closest('.preventClick') !== null) {
+        return;
+      }
+      isActive.value = false;
+    }
+
+    /* Клик по чекбоксу "Выделить все" */
+    const changeAll = () => {
+      if (isSelectAll.value) {
+        selection.value = tpValues.value;
+      } else {
+        selection.value = [];
+      }
+    }
+
+    onMounted(() => {
+      document.addEventListener('click', onDocumentClick);
+    });
+
+    onBeforeUnmount(() => {
+      document.removeEventListener('click', onDocumentClick);
+    });
+
+    /* При изменении в  массиве чекбоксов - менять чекбокс all */
+    watch(selection, (value) => {
+      emit('update:searchTp', value);
+      if (selection.value.length === tpValues.value.length) {
+        isSelectAll.value = true;
+      } else {
+        isSelectAll.value = false;
+      }
+    });
 
     return {
       tpValues,
@@ -74,41 +111,14 @@ export default {
       selection,
       isActive,
       query,
+
+      onDocumentClick,
+      changeAll,
     }
   },
   components: {
     IconFilter,
     IconFilterBlue,
-  },
-  props: ['props', 'searchTp'],
-  methods: {
-    onClick(event) {
-      if (event.target.closest('.preventClick') !== null) {
-        return;
-      }
-      this.isActive = false;
-    },
-  },
-  mounted() {
-    document.addEventListener('click', this.onClick);
-  },
-  beforeDestroy() {
-    document.removeEventListener('click', this.onClick);
-  },
-  watch: {
-    selection(modelValue) {
-      this.$emit("update:searchTp", modelValue);
-      if (this.selection !== this.tpValues) {
-        this.isSelectAll = false;
-      }
-    },
-    isSelectAll(value) {
-      if (value) {
-        this.selection = this.tpValues;
-      } else {
-        //this.selection = [];
-      }
-    },
   },
 }
 </script>
@@ -118,6 +128,9 @@ export default {
 
 th.active
   z-index: 2 !important
+
+.cell-tp
+  width: 220px
 
 .alignment
   display: flex
