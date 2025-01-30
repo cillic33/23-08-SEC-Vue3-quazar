@@ -4,7 +4,7 @@
 
 `npm install`
 
-`bpm run dev`
+`npm run dev`
 
 **Проверить, что в main.js файл 
 `import './style.sass'`
