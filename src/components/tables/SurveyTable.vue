@@ -64,8 +64,8 @@ import IconFilterCell from "@/components/svg/IconFilterCell.vue";
 import ColumnsDialog from "@/components/dialogs/ColumnsDialog.vue";
 import columns from "@/data/surveyColumns.js";
 import rows from "@/data/surveyRows.js";
-import SurveyThTp from "@/components/tables/SurveyThTp.vue";
-import SurveyTdTp from "@/components/tables/SurveyTdTp.vue";
+import SurveyThTp from "@/components/tables/cells/tp/SurveyThTp.vue";
+import SurveyTdTp from "@/components/tables/cells/tp/SurveyTdTp.vue";
 import DownloadButton from "@/components/dropdowns/DownloadButton.vue";
 import BasePagination from "@/components/base/BasePagination.vue";
 

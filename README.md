@@ -2,7 +2,14 @@
 
 Проект УВЗ (Удовлетворенность внешних заказчиков)
 
--- npm install
+`npm install`
+
+`bpm run dev`
+
+**Проверить, что в main.js файл 
+`import './style.sass'`
+подключен последним, непосредственно перед
+`const app = createApp(App)`**
 
 This template should help get you started developing with Vue 3 in Vite. The template uses Vue 3 `<script setup>` SFCs, check out the [script setup docs](https://v3.vuejs.org/api/sfc-script-setup.html#sfc-script-setup) to learn more.
 

@@ -124,7 +124,7 @@ export default {
 </script>
 
 <style lang="sass" scoped>
-@import '../../assets/css/mixins.sass'
+@import '../../../../assets/css/mixins.sass'
 
 th.active
   z-index: 2 !important
